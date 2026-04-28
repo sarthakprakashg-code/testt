@@ -94,7 +94,7 @@ button{
 <div class="card">
 
 <div class="photo-box">
-<img id="photo" src="66.jpg">
+<img id="photo" src="./66.jpeg" onerror="this.src='./66.jpg'">
 <div id="typeText" class="overlay-text"></div>
 </div>
 
@@ -119,19 +119,33 @@ document.querySelector(".airplane").classList.add("fly");
 setTimeout(()=>nextScreen(3,4),800);
 }
 
-let photos=["66.jpg","3.jpg","2.jpg"];
+/* 🔥 BULLETPROOF IMAGE SYSTEM */
+let photos=["./66.jpeg","./3.jpeg","./2.jpeg"];
+
 let texts=["cute 😼","my weakness 🥹","still unfair 💝"];
 let i=0;
 
 function startPhoto(){
 i=0;
-document.getElementById("photo").src=photos[0];
+loadImage(photos[0]);
 type(texts[0]);
+}
+
+function loadImage(src){
+let img=document.getElementById("photo");
+img.src=src;
+
+// fallback to .jpg if .jpeg fails
+img.onerror=function(){
+this.onerror=null;
+this.src=src.replace(".jpeg",".jpg");
+};
 }
 
 function type(t){
 let el=document.getElementById("typeText");
-el.innerHTML="";let j=0;
+el.innerHTML="";
+let j=0;
 let x=setInterval(()=>{
 if(j<t.length) el.innerHTML+=t[j++];
 else clearInterval(x);
@@ -141,7 +155,7 @@ else clearInterval(x);
 function nextPhoto(){
 i++;
 if(i<photos.length){
-document.getElementById("photo").src=photos[i];
+loadImage(photos[i]);
 type(texts[i]);
 }else{
 document.getElementById("voice").play().catch(()=>{});
